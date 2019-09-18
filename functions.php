@@ -29,17 +29,17 @@
             //decode EncryptedMessage
             $MessageRequest = base64_decode($EncryptedMessage);
 
+            //check serviceNumber
+            $pattern = '/^\s*((PC {1,3})([a-zA-Z0-9]+ {1,3})([0-9]{8,12})\s*$)|(^\s*(PC {1,3})(VAY)\s*$)/i';
+
             // check EncryptedMessage after decode
-            $pattern = '/^\s*(PC {1,3})([a-zA-Z0-9]+ {1,3})([0-9]{8,12})\s*$/i';
             $messageResponse = "";
-            
+
             if (preg_match($pattern, $MessageRequest)) {
                 $messageResponse = 'PawnCredit se phan hoi den quy khach hang trong vong 24 gio. Chi tiet lien he Bo phan tu van 0888 211 822. Xin cam on!';
             } else {
                 $messageResponse = 'Cu phap tin nhan khong hop le.';
             }
-
-            
 
             //gerenate MySignature
             $MySignature = base64_encode(sha1($MOId . $ServiceNum . $Phone . strtolower($MessageRequest) . $privateKey, true));
@@ -62,5 +62,10 @@
         }
     } catch (Exception $e){
         echo 'Message: '.$e->getMessage();
+        return "01|System error";
     }
+    };
+
+    function sentData($MOId){
+        return $MOId;
     }
